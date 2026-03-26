@@ -10,8 +10,6 @@
 
 """Tests for watchdog module."""
 
-import Globals  # NOQA: imported for side effects.
-
 import argparse
 import os
 import stat

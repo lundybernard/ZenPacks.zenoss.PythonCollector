@@ -7,8 +7,6 @@
 #
 ##############################################################################
 
-import Globals  # noqa
-
 import logging
 LOG = logging.getLogger('zen.PythonCollector')
 

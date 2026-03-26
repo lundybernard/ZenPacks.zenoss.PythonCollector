@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ################################
 # These variables are overwritten by Zenoss when the ZenPack is exported
 # or saved.  Do not modify them directly here.
@@ -16,14 +18,17 @@ PREV_ZENPACK_NAME = ""
 # Zenoss will not overwrite any changes you make below here.
 
 import os
+import sys
 from subprocess import Popen, PIPE
 from setuptools import setup, find_packages
 
 # Run "make build" if a GNUmakefile is present.
 if os.path.isfile('GNUmakefile'):
-    print 'GNUmakefile found. Running "make build" ..'
+    print('GNUmakefile found. Running "make build" ..')
     p = Popen('make build', stdout=PIPE, stderr=PIPE, shell=True)
-    print p.communicate()[0]
+    print("=====================================", file=sys.stderr)
+    print(p.communicate()[0], file=sys.stderr)
+    print("=====================================", file=sys.stderr)
     if p.returncode != 0:
         raise Exception('"make build" exited with an error: %s' % p.returncode)
 
@@ -67,6 +72,11 @@ setup(
     # go poorly if this line is broken into multiple lines or modified to
     # dramatically.
     install_requires=INSTALL_REQUIRES,
+
+    # Tell setuptools what scripts should be installed as commands.
+    scripts=[
+        "ZenPacks/zenoss/PythonCollector/daemons/zenpython"
+    ],
 
     # Every ZenPack egg must define exactly one zenoss.zenpacks entry point
     # of this form.

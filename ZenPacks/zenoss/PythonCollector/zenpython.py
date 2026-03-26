@@ -15,7 +15,6 @@ Event and statistic collection daemon for python modules.
 """
 
 import logging
-log = logging.getLogger('zen.python')
 
 import collections
 import datetime
@@ -24,8 +23,7 @@ import inspect
 import optparse
 import re
 
-import Globals
-
+log = logging.getLogger('zen.python')
 
 if __name__ == "__main__":
     # Install the best reactor available if run as a script. This must
@@ -112,8 +110,8 @@ DEFAULT_MANHOLE_USERNAME = 'zenoss'
 DEFAULT_MANHOLE_PASSWORD = 'zenoss'
 
 
+@zope.interface.implementer(ICollectorPreferences)
 class Preferences(object):
-    zope.interface.implements(ICollectorPreferences)
 
     collectorName = 'zenpython'
     configurationService = 'ZenPacks.zenoss.PythonCollector.services.PythonConfig'
@@ -308,10 +306,9 @@ class PerDataSourceInstanceTaskSplitter(SubConfigurationTaskSplitter):
                     .format(', '.join(sorted(disabled_datasources))))})
 
 
+@zope.interface.implementer(IScheduledTask)
 class PythonCollectionTask(BaseTask):
     """A task that performs periodic PythonDataSource collection."""
-
-    zope.interface.implements(IScheduledTask)
 
     STATE_STORE_PERF = 'STORE_PERF_DATA'
     STATE_PUBLISH_METRICS = 'PUBLISH_METRICS'

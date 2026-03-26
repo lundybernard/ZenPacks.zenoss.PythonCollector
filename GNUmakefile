@@ -12,28 +12,36 @@ SRC_DIR=$(PWD)/src
 LIB_DIR=$(ZP_DIR)/lib
 BUILD_DIR=$(ZP_DIR)/build
 
-MONOTONIC_SRC=$(SRC_DIR)/monotonic-1.5.tar.gz
+MONOTONIC_SRC=$(SRC_DIR)/monotonic-1.6.tar.gz
 MONOTONIC_DIR=$(LIB_DIR)/monotonic
 
-.PHONY: default
-default: egg
+.PHONY: wheel
+wheel:
+	python -m build
 
 .PHONY: egg
 egg:
 	# setup.py will call 'make build' before creating the egg
-	python setup.py bdist_egg
+	python2 setup.py bdist_egg
+
+.PHONY: update-deps
+update-deps:
 
 $(MONOTONIC_DIR):
 	mkdir -p $(MONOTONIC_DIR)
 
+.PHONY: monotonic
+monotonic: $(MONOTONIC_SRC)
+	@python -m pip install --upgrade -t $(LIB_DIR)/ --no-build-isolation --no-cache-dir --no-deps $< 2>&1
+
 .PHONY: py_monotonic
 py_monotonic: $(MONOTONIC_SRC) $(MONOTONIC_DIR)
-	rm -rf $(BUILD_DIR); mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR); tar zxf $(MONOTONIC_SRC) --strip-components=1 -C $(BUILD_DIR)	
-	cd $(BUILD_DIR); python setup.py build --build-lib build/lib
-	touch $(MONOTONIC_DIR)/__init__.py
-	cp -r $(BUILD_DIR)/build/lib/* $(MONOTONIC_DIR)
-	rm -rf $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR); mkdir -p $(BUILD_DIR)
+	@cd $(BUILD_DIR); tar zxf $(MONOTONIC_SRC) --strip-components=1 -C $(BUILD_DIR)	
+	@cd $(BUILD_DIR); python setup.py build --build-lib build/lib
+	@touch $(MONOTONIC_DIR)/__init__.py
+	@cp -r $(BUILD_DIR)/build/lib/* $(MONOTONIC_DIR)
+	@rm -rf $(BUILD_DIR)
 
 .PHONY: build
 build: py_monotonic

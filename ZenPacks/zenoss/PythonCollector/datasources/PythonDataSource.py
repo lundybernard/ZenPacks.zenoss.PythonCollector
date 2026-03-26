@@ -13,7 +13,7 @@ import time
 
 from Acquisition import aq_base
 from zope.component import adapts
-from zope.interface import implements
+from zope.interface import implementer
 
 from twisted.internet import defer
 
@@ -107,8 +107,8 @@ class IPythonDataSourceInfo(IRRDDataSourceInfo):
     cycletime = schema.TextLine(title=_t(u'Cycle Time (seconds)'))
 
 
+@implementer(IPythonDataSourceInfo)
 class PythonDataSourceInfo(RRDDataSourceInfo):
-    implements(IPythonDataSourceInfo)
     adapts(PythonDataSource)
 
     testable = False
